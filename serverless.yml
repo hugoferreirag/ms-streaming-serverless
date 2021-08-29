@@ -1,0 +1,37 @@
+service: microservice-streaming
+
+frameworkVersion: "2"
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: "20201221"
+  timeout: 30
+
+plugins:
+  - serverless-dotenv-plugin # Allow set global parameters in env.{enviroment}
+  - serverless-offline
+
+functions:
+  findAllSessions:
+    handler: gatways/controllers/SessionController.findAllSessions
+    events:
+      - http:
+          path: /sessions/list/all
+          method: get
+          cors: true
+  paginationSessions:
+    handler: gatways/controllers/SessionController.paginationSessions
+    events:
+      - http:
+          path: /sessions/page/{page}
+          method: get
+          cors: true
+  createSession:
+    handler: gatways/controllers/SessionController.createSession
+    events:
+      - http:
+          path: /sessions/create
+          method: post
+          cors: true
