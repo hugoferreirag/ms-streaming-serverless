@@ -2,24 +2,20 @@
 
 const Video = require("../../interfaces/video/IVideo");
 module.exports.CreateVideo = (
-  sessionId,
-  videoName,
-  videoDescription,
-  videoUrl,
-  videoThumb,
-  locked,
+  { sessionId, videoName, videoDescription, videoUrl, videoThumb, locked },
   { videoRepository }
 ) => {
-  const user = new Video(
-    null,
+  const video = new Video({
+    _id: null,
     sessionId,
     videoName,
     videoDescription,
     videoUrl,
     videoThumb,
-    locked
-  );
-  return videoRepository.create(user);
+    locked,
+  });
+  delete video._id;
+  return videoRepository.create(video);
 };
 
 module.exports.PaginationVideo = (page, { videoRepository }) => {

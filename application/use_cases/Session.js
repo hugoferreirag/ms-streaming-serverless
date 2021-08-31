@@ -3,9 +3,7 @@ module.exports.CreateSession = (
   { name, description, locked },
   { sessionRepository }
 ) => {
-  const session = new Session(null, name, description, locked);
-  delete session._id;
-  return sessionRepository.create(session);
+  return sessionRepository.create({ name, description, locked });
 };
 
 module.exports.FindAllSessions = ({ sessionRepository }) => {

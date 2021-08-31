@@ -1,44 +1,28 @@
 const SessionService = require("../../interfaces/session/ISessionService");
 const IVideo = require("../../interfaces/video/IVideo");
-const Response = require("./ResponseService");
+const {
+  handleError,
+  successfullyCreated,
+} = require("../../core/config/libs/ResponseService");
 
 module.exports = class extends SessionService {
-  constructor() {
-    super();
-    this.response = new Response();
-  }
-  async createSession(
-    session,
-    { FindOneSession, CreateSession },
-    serviceLocator
-  ) {
+  async createSession(session, { CreateSession }, serviceLocator) {
     try {
-      console.log(this.response, this.statusCode);
-      this.#validatePayloadReceived(session);
-
-      await this.#checkSessionExists(session, FindOneSession, serviceLocator);
-
       const newSession = await CreateSession(session, serviceLocator);
-      this.response.successfullyCreated({ data: newSession });
+
+      return newSession;
     } catch (error) {
-      return this.response.handleError({ error: error });
+      return error;
     }
   }
-  #validatePayloadReceived({ name }) {
-    if (!name) throw 400;
-  }
 
-  async #checkSessionExists({ name }, FindOneSession, serviceLocator) {
+  async checkSessionExists({ name }, { FindOneSession }, serviceLocator) {
     const sessionExists = await FindOneSession(name, serviceLocator);
 
-    if (sessionExists) throw 400;
+    if (sessionExists) throw 409;
   }
 
-  async findAllSessions(
-    event = null,
-    { FindAllSessions, FindAllVideos },
-    serviceLocator
-  ) {
+  async findAllSessions({ FindAllSessions, FindAllVideos }, serviceLocator) {
     try {
       const allVideos = await FindAllVideos(serviceLocator);
 
@@ -48,6 +32,7 @@ module.exports = class extends SessionService {
         const videosOfCurrentSession = allVideos.filter((video, index) => {
           return video.sessionId == session._id;
         });
+
         return {
           _id: session._id,
           sessionName: session.name,
@@ -59,10 +44,7 @@ module.exports = class extends SessionService {
 
       return showcasePerSession;
     } catch (error) {
-      return {
-        status: 400,
-        message: error.message,
-      };
+      return error;
     }
   }
   async paginationSessions(
@@ -90,10 +72,7 @@ module.exports = class extends SessionService {
 
       return showcasePerSession;
     } catch (error) {
-      return {
-        status: 400,
-        message: error.message,
-      };
+      return error;
     }
   }
 };

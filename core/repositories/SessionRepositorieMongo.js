@@ -49,11 +49,13 @@ module.exports = class extends SessionRepository {
       .skip(skip)
       .limit(5);
     return mongoSessions.map((mongoSession) => {
-      return new Session(
-        mongoSession._id,
-        mongoSession.name,
-        mongoSession.description
-      );
+      console.log(mongoSession.name);
+      return new Session({
+        _id: mongoSession._id,
+        name: mongoSession.name,
+        description: mongoSession.description,
+        locked: false,
+      });
     });
   }
 };

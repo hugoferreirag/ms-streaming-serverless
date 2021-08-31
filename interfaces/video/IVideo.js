@@ -1,15 +1,15 @@
 "use strict";
 
 module.exports = class {
-  constructor(
+  constructor({
     _id = null,
     sessionId,
     videoName,
     videoDescription,
     videoUrl,
     videoThumb,
-    locked
-  ) {
+    locked,
+  }) {
     this._id = _id;
     this.sessionId = sessionId;
     this.videoName = videoName;

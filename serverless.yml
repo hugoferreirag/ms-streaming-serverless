@@ -15,23 +15,38 @@ plugins:
 
 functions:
   findAllSessions:
-    handler: gatways/controllers/SessionController.findAllSessions
+    handler: gatways/routes/main.handle
     events:
       - http:
-          path: /sessions/list/all
+          path: /{controller}/{action}
           method: get
           cors: true
+          request:
+          parameters:
+            paths:
+              action: true
+              controller: true
   paginationSessions:
-    handler: gatways/controllers/SessionController.paginationSessions
+    handler: gatways/routes/main.handle
     events:
       - http:
-          path: /sessions/page/{page}
+          path: /{controller}/{action}/{page}
           method: get
           cors: true
+          request:
+          parameters:
+            paths:
+              action: true
+              controller: true
   createSession:
-    handler: gatways/controllers/SessionController.createSession
+    handler: gatways/routes/main.handle
     events:
       - http:
-          path: /sessions/create
+          path: /{controller}/{action}/
           method: post
           cors: true
+          request:
+          parameters:
+            paths:
+              action: true
+              controller: true

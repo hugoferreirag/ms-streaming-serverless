@@ -1,4 +1,12 @@
 module.exports = {
+  isRequiredInObject(values, object, error) {
+    values.forEach((element) => {
+      if (!object[element]) throw error;
+    });
+  },
+  isRequired(value, error) {
+    if (!value) throw error;
+  },
   validateDocument: (document) => {
     var numbers, digit, soma, i, result, digitEqual;
     digitEqual = 1;
